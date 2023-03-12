@@ -7,72 +7,82 @@ import static org.hamcrest.Matchers.is;
 public class ReqresInTests {
 
 
- /*
-        1. Make POST request to https://reqres.in/api/login
-        with body { "email": "eve.holt@reqres.in", "password": "cityslicka" }
-        2. Get response   {"token": "QpwL5tke4Pnpja7X4"}
-        3. Check token is QpwL5tke4Pnpja7X4
-   */
-
     @Test
-    void loginTest() {
-        String data = "{ \"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\" }";
+    void patchNameAndJobTest() {
+        String data = "{ \"name\": \"Homer Simpson\", \"job\": \"nuclear safety inspector\" }";
         given()
                 .log().uri()
                 .contentType(JSON)
                 .body(data)
                 .when()
-                .post("https://reqres.in/api/login")
+                .patch("https://reqres.in/api/users/2")
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("token", is("QpwL5tke4Pnpja7X4"));
-
+                .body("name", is("Homer Simpson"))
+                .body("job", is("nuclear safety inspector"));
     }
 
     @Test
-    void unsupportedMediaTypeTest() {
-        given()
-                .log().uri()
-                .when()
-                .post("https://reqres.in/api/login")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(415);
-    }
-
-    @Test
-    void missingEmailOrUserNameTest() {
-        given()
-                .log().uri()
-                .body("123")
-                .when()
-                .post("https://reqres.in/api/login")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(400)
-                .body("error", is("Missing email or username"));
-
-    }
-    @Test
-    void missingPasswordTest() {
-        String data = "{ \"email\": \"eve.holt@reqres.in\"}";
+    void patchOnlyNameTest() {
+        String data = "{ \"name\": \"Homer Simpson\"}";
         given()
                 .log().uri()
                 .contentType(JSON)
                 .body(data)
                 .when()
-                .post("https://reqres.in/api/login")
+                .patch("https://reqres.in/api/users/2")
                 .then()
                 .log().status()
                 .log().body()
-                .statusCode(400)
-                .body("error", is("Missing password"));
-
+                .statusCode(200)
+                .body("name", is("Homer Simpson"));
     }
 
+    @Test
+    void patchOnlyJobTest() {
+        String data = "{ \"job\": \"nuclear safety inspector\"}";
+        given()
+                .log().uri()
+                .contentType(JSON)
+                .body(data)
+                .when()
+                .patch("https://reqres.in/api/users/2")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(200)
+                .body("job", is("nuclear safety inspector"));
+    }
+
+    @Test
+    void patchWithountBodyTest() {
+        given()
+                .log().uri()
+                .when()
+                .patch("https://reqres.in/api/users/2")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(200);
+    }
+
+    @Test
+    void patchAddWifeTest() {
+        String data = "{ \"name\": \"Homer Simpson\", \"job\": \"nuclear safety inspector\" ,\"wife\": \"Marge Simpson\"}";
+        given()
+                .log().uri()
+                .contentType(JSON)
+                .body(data)
+                .when()
+                .patch("https://reqres.in/api/users/2")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(200)
+                .body("wife", is("Marge Simpson"));
+
+    }
 
 }
