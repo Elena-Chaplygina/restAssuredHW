@@ -2,7 +2,7 @@ plugins {
     id 'java-library'
 }
 
-def slf4jVersion="1.7.32"
+
 
 repositories {
     mavenCentral()
