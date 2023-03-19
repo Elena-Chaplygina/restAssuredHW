@@ -1,16 +1,20 @@
+import model.UserBodyRequestModel;
+import model.UserBodyResponseModel;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReqresInTests {
 
 
     @Test
     void patchNameAndJobTest() {
-        String data = "{ \"name\": \"Homer Simpson\", \"job\": \"nuclear safety inspector\" }";
-        given()
+        UserBodyRequestModel data=new UserBodyRequestModel();
+        data.setName("Homer Simpson");
+        data.setJob("nuclear safety inspector");
+        UserBodyResponseModel response = given()
                 .log().uri()
                 .contentType(JSON)
                 .body(data)
@@ -20,14 +24,16 @@ public class ReqresInTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("name", is("Homer Simpson"))
-                .body("job", is("nuclear safety inspector"));
+                .extract().as(UserBodyResponseModel.class);
+        assertThat(response.getName()).isEqualTo("Homer Simpson");
+        assertThat(response.getJob()).isEqualTo("nuclear safety inspector");
     }
 
     @Test
     void patchOnlyNameTest() {
-        String data = "{ \"name\": \"Homer Simpson\"}";
-        given()
+        UserBodyRequestModel data=new UserBodyRequestModel();
+        data.setName("Homer Simpson");
+        UserBodyResponseModel response = given()
                 .log().uri()
                 .contentType(JSON)
                 .body(data)
@@ -37,13 +43,15 @@ public class ReqresInTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("name", is("Homer Simpson"));
+                .extract().as(UserBodyResponseModel.class);
+        assertThat(response.getName()).isEqualTo("Homer Simpson");
     }
 
     @Test
     void patchOnlyJobTest() {
-        String data = "{ \"job\": \"nuclear safety inspector\"}";
-        given()
+        UserBodyRequestModel data=new UserBodyRequestModel();
+        data.setJob("nuclear safety inspector");
+        UserBodyResponseModel response = given()
                 .log().uri()
                 .contentType(JSON)
                 .body(data)
@@ -53,7 +61,9 @@ public class ReqresInTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("job", is("nuclear safety inspector"));
+                .extract().as(UserBodyResponseModel.class);
+        assertThat(response.getJob()).isEqualTo("nuclear safety inspector");
+
     }
 
     @Test
@@ -70,8 +80,11 @@ public class ReqresInTests {
 
     @Test
     void patchAddWifeTest() {
-        String data = "{ \"name\": \"Homer Simpson\", \"job\": \"nuclear safety inspector\" ,\"wife\": \"Marge Simpson\"}";
-        given()
+        UserBodyRequestModel data=new UserBodyRequestModel();
+        data.setName("Homer Simpson");
+        data.setJob("nuclear safety inspector");
+        data.setWife("Marge Simpson");
+        UserBodyResponseModel response = given()
                 .log().uri()
                 .contentType(JSON)
                 .body(data)
@@ -81,7 +94,10 @@ public class ReqresInTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("wife", is("Marge Simpson"));
+                .extract().as(UserBodyResponseModel.class);
+        assertThat(response.getJob()).isEqualTo("nuclear safety inspector");
+        assertThat(response.getName()).isEqualTo("Homer Simpson");
+        assertThat(response.getWife()).isEqualTo("Marge Simpson");
 
     }
 
