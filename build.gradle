@@ -1,13 +1,14 @@
 plugins {
     id 'java-library'
     id 'io.freefair.lombok' version '6.0.0-m2'
-    id 'io.qameta.allure' version '2.10.0'
+    id 'io.qameta.allure' version '2.11.2'
 }
 repositories {
     mavenCentral()
 }
-def slf4jVersion = "2.0.6",
-    allureVersion = "2.19.0"
+
+def allureVersion ="2.20.1",
+slf4jVersion="2.0.7"
 
 allure {
     report {

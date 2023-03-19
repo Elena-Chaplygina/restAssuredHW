@@ -1,12 +1,14 @@
+import io.restassured.filter.Filter;
 import model.UserBodyRequestModel;
 import model.UserBodyResponseModel;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
+import static specs.UserSpecs.userRequestSpec;
+import static specs.UserSpecs.userResponseSpec;
 
-public class ReqresInTests {
+public class ReqresInTests extends TestBase{
 
 
     @Test
@@ -14,16 +16,12 @@ public class ReqresInTests {
         UserBodyRequestModel data=new UserBodyRequestModel();
         data.setName("Homer Simpson");
         data.setJob("nuclear safety inspector");
-        UserBodyResponseModel response = given()
-                .log().uri()
-                .contentType(JSON)
+        UserBodyResponseModel response = given(userRequestSpec)
                 .body(data)
                 .when()
-                .patch("https://reqres.in/api/users/2")
+                .patch("/users/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
+                .spec(userResponseSpec)
                 .extract().as(UserBodyResponseModel.class);
         assertThat(response.getName()).isEqualTo("Homer Simpson");
         assertThat(response.getJob()).isEqualTo("nuclear safety inspector");
@@ -33,16 +31,12 @@ public class ReqresInTests {
     void patchOnlyNameTest() {
         UserBodyRequestModel data=new UserBodyRequestModel();
         data.setName("Homer Simpson");
-        UserBodyResponseModel response = given()
-                .log().uri()
-                .contentType(JSON)
+        UserBodyResponseModel response = given(userRequestSpec)
                 .body(data)
                 .when()
-                .patch("https://reqres.in/api/users/2")
+                .patch("/users/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
+                .spec(userResponseSpec)
                 .extract().as(UserBodyResponseModel.class);
         assertThat(response.getName()).isEqualTo("Homer Simpson");
     }
@@ -51,16 +45,12 @@ public class ReqresInTests {
     void patchOnlyJobTest() {
         UserBodyRequestModel data=new UserBodyRequestModel();
         data.setJob("nuclear safety inspector");
-        UserBodyResponseModel response = given()
-                .log().uri()
-                .contentType(JSON)
+        UserBodyResponseModel response = given(userRequestSpec)
                 .body(data)
                 .when()
-                .patch("https://reqres.in/api/users/2")
+                .patch("/users/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
+                .spec(userResponseSpec)
                 .extract().as(UserBodyResponseModel.class);
         assertThat(response.getJob()).isEqualTo("nuclear safety inspector");
 
@@ -68,14 +58,11 @@ public class ReqresInTests {
 
     @Test
     void patchWithountBodyTest() {
-        given()
-                .log().uri()
+        given(userRequestSpec)
                 .when()
-                .patch("https://reqres.in/api/users/2")
+                .patch("/users/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200);
+                .spec(userResponseSpec);
     }
 
     @Test
@@ -84,16 +71,12 @@ public class ReqresInTests {
         data.setName("Homer Simpson");
         data.setJob("nuclear safety inspector");
         data.setWife("Marge Simpson");
-        UserBodyResponseModel response = given()
-                .log().uri()
-                .contentType(JSON)
+        UserBodyResponseModel response = given(userRequestSpec)
                 .body(data)
                 .when()
-                .patch("https://reqres.in/api/users/2")
+                .patch("/users/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
+                .spec(userResponseSpec)
                 .extract().as(UserBodyResponseModel.class);
         assertThat(response.getJob()).isEqualTo("nuclear safety inspector");
         assertThat(response.getName()).isEqualTo("Homer Simpson");
