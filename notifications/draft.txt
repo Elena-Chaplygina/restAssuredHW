@@ -1,0 +1,19 @@
+
+Telegram username: @qa_guru_17_chapl_bot
+Telegram token: 6274258220:AAHr-Dosdq-RBmKumDHsjPhNE3V12QnJfvI
+Chat id: 285811961
+
+a. Fetch bot updates and look for the chat id:
+curl https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getUpdates | jq .message.chat.id
+curl https://api.telegram.org/bot6274258220:AAHr-Dosdq-RBmKumDHsjPhNE3V12QnJfvI/getUpdates | jq.message.chat.id
+
+
+Send a message using the HTTP API:
+ "disable_notification": true}'  https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage
+
+
+curl -X POST  -H 'Content-Type: application/json'  -d '{"chat_id": "285811961", "text": "This is a test from qa_guru", "disable_notification": true}'  https://api.telegram.org/bot6274258220:AAHr-Dosdq-RBmKumDHsjPhNE3V12QnJfvI/sendMessage
+
+Run jar with notifications
+java "-DconfigFile=notifications/config.json" -jar notifications/allure-notifications-4.2.1.jar
+java "-DconfigFile=notifications/config.json" -Dfile.encoding=UTF8 -jar notifications/allure-notifications-4.2.1.jar

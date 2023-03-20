@@ -1,0 +1,17 @@
+{
+  "base": {
+    "logo": "",
+    "project": "TestSelectBankSubscription",
+    "environment": "qa guru",
+    "comment": "Test complete, @Eaachp",
+    "reportLink": "",
+    "language": "ru",
+    "allureFolder": "allure-report/",
+    "enableChart": true
+  },
+  "telegram": {
+    "token": "6274258220:AAHr-Dosdq-RBmKumDHsjPhNE3V12QnJfvI",
+    "chat": "285811961",
+    "replyTo": ""
+  }
+}
