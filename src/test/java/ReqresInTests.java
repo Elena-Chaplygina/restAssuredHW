@@ -1,103 +1,84 @@
-import model.UserBodyRequestModel;
-import model.UserBodyResponseModel;
+import model.UserData;
 import org.junit.jupiter.api.Test;
+import specs.UserSpecs;
 
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static specs.UserSpecs.userRequestSpec;
-import static specs.UserSpecs.userResponseSpec;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ReqresInTests extends TestBase{
-
+public class ReqresInTests extends TestBase {
 
     @Test
-    void patchNameAndJobTest() {
-        UserBodyRequestModel data=new UserBodyRequestModel();
-        data.setName("Homer Simpson");
-        data.setJob("nuclear safety inspector");
-        UserBodyResponseModel response =
-                step("Get name and job data",()->
-                given(userRequestSpec)
-                .body(data)
-                .when()
-                .patch("/users/2")
-                .then()
-                .spec(userResponseSpec)
-                .extract().as(UserBodyResponseModel.class));
-        step("Verify update response name",()->
-        assertThat(response.getName()).isEqualTo("Homer Simpson"));
-        step("Verify update job",()->
-        assertThat(response.getJob()).isEqualTo("nuclear safety inspector"));
+    void checkFirstNameSingleUser() {
+        step("GET /users/10 check first name", () -> {
+            UserData data = UserSpecs.userRequestSpec
+                    .when()
+                    .get("/users/10")
+                    .then()
+                    .spec(UserSpecs.userResponseSpec)
+                    .log()
+                    .body()
+                    .extract().as(UserData.class);
+            assertEquals("Byron", data.getData().getFirstName());
+
+        });
     }
 
     @Test
-    void patchOnlyNameTest() {
-        UserBodyRequestModel data=new UserBodyRequestModel();
-        data.setName("Homer Simpson");
-        UserBodyResponseModel response =
-                step("Get only name data",()->
-                        given(userRequestSpec)
-                .body(data)
-                .when()
-                .patch("/users/2")
-                .then()
-                .spec(userResponseSpec)
-                .extract().as(UserBodyResponseModel.class));
-        step("Verify update name",()->
-                assertThat(response.getName()).isEqualTo("Homer Simpson"));
-    }
+    void checkEmailListOfUser() {
+        step("GET /users?page=2 check email", () -> {
 
-    @Test
-    void patchOnlyJobTest() {
-        UserBodyRequestModel data=new UserBodyRequestModel();
-        data.setJob("nuclear safety inspector");
-        UserBodyResponseModel response =
-                step("Get only job data",()->
-                        given(userRequestSpec)
-                .body(data)
-                .when()
-                .patch("/users/2")
-                .then()
-                .spec(userResponseSpec)
-                .extract().as(UserBodyResponseModel.class));
-        step("Verify update job",()->
-                assertThat(response.getJob()).isEqualTo("nuclear safety inspector"));
+            given()
+                    .spec(UserSpecs.userRequestSpec)
+                    .when()
+                    .get("/users?page=2")
+                    .then()
+                    .spec(UserSpecs.userResponseSpec)
+                    .log().body()
+                    .body("data.findAll{it.email=~/.*?@reqres.in/}.email.flatten()",
+                            hasItem("lindsay.ferguson@reqres.in"));
+        });
+
 
     }
 
     @Test
-    void patchWithountBodyTest() {
-        step("Verify status code withount request body",()->
-                given(userRequestSpec)
-                .when()
-                .patch("/users/2")
-                .then()
-                .spec(userResponseSpec));
+    void checkFirstNameListOfUser() {
+        step("GET /users?page=2 check first name", () -> {
+
+            given()
+                    .spec(UserSpecs.userRequestSpec)
+                    .when()
+                    .get("/users?page=2")
+                    .then()
+                    .spec(UserSpecs.userResponseSpec)
+                    .log().body()
+                    .body("data.find{it.id==10}.first_name",
+                            is("Byron"));
+        });
+
+
     }
 
     @Test
-    void patchAddWifeTest() {
-        UserBodyRequestModel data=new UserBodyRequestModel();
-        data.setName("Homer Simpson");
-        data.setJob("nuclear safety inspector");
-        data.setWife("Marge Simpson");
-        UserBodyResponseModel response =
-                step("Get name, job and wife data",()->
-                        given(userRequestSpec)
-                .body(data)
-                .when()
-                .patch("/users/2")
-                .then()
-                .spec(userResponseSpec)
-                .extract().as(UserBodyResponseModel.class));
-        step("Verify update job",()->
-                assertThat(response.getJob()).isEqualTo("nuclear safety inspector"));
-        step("Verify update name",()->
-                assertThat(response.getName()).isEqualTo("Homer Simpson"));
-        step("Verify update wife",()->
-                assertThat(response.getWife()).isEqualTo("Marge Simpson"));
+    void checkLastNameListOfUser() {
+        step("GET /users?page=2 check last name", () -> {
+
+            given()
+                    .spec(UserSpecs.userRequestSpec)
+                    .when()
+                    .get("/users?page=2")
+                    .then()
+                    .spec(UserSpecs.userResponseSpec)
+                    .log().body()
+                    .body("data.find{it.first_name==~/Rachel/}.last_name",
+                            is("Howell"));
+        });
+
 
     }
+
 
 }
